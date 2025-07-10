@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agente de IA para Pet Shops – Atendimento e Agendamentos Automatizados</title>
+    <style>
+        /* --- Configurações Gerais e Fontes --- */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        :root {
+            --primary-color: #4A90E2; /* Azul moderno */
+            --secondary-color: #F5A623; /* Laranja amigável */
+            --dark-color: #2c3e50; /* Azul escuro/cinza */
+            --light-color: #ecf0f1; /* Cinza claro */
+            --white-color: #ffffff;
+            --success-color: #27ae60;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark-color);
+            line-height: 1.6;
+            background-color: var(--white-color);
+        }
+
+        /* --- Estrutura e Componentes --- */
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            overflow: hidden;
+            padding: 0 2rem;
+        }
+
+        section {
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        section#hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1548681528-6a5c45b66b42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDE0fHxwZXQlMjBzaG9wfGVufDB8fHx8MTY4MTM5NzYwNQ&ixlib=rb-4.0.3&q=80&w=1080') no-repeat center center/cover;
+            color: var(--white-color);
+            padding: 6rem 0;
+        }
+
+        h1, h2 {
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        h1 {
+            font-size: 3rem;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background-color: var(--secondary-color);
+            color: var(--white-color);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            background-color: #e69500;
+        }
+
+        /* --- Seções Específicas --- */
+        #hero h3 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            max-width: 700px;
+            margin: 1rem auto 2rem;
+        }
+
+        .hero-footer {
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .grid-2 {
+             display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .card {
+            background: var(--white-color);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        /* Como Funciona */
+        #how-it-works .steps-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 3rem;
+            position: relative;
+        }
+        
+        #how-it-works .step-card {
+            background: var(--light-color);
+            padding: 1.5rem;
+            border-radius: 10px;
+            width: 18%;
+            position: relative;
+        }
+
+        #how-it-works .step-number {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            background: var(--secondary-color);
+            color: var(--white-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border: 3px solid var(--white-color);
+        }
+
+        /* Funcionalidades e Benefícios */
+        .feature-item, .benefit-item {
+            display: flex;
+            align-items: center;
+            text-align: left;
+            margin: 1.5rem auto;
+            max-width: 600px;
+            background: var(--light-color);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+        
+        .feature-item .icon, .benefit-item .icon {
+            font-size: 2rem;
+            color: var(--success-color);
+            margin-right: 1.5rem;
+        }
+
+        .benefit-item .icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+        }
+        
+        .benefit-item h3 {
+             color: var(--primary-color);
+             font-size: 1.8rem;
+             margin: 0;
+        }
+
+        /* Integrações */
+        .logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .logos img {
+            height: 50px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        
+        .logos img:hover {
+            opacity: 1;
+        }
+        
+        /* Chamada para Ação (CTA) */
+        #cta {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        #cta h2 {
+            color: var(--white-color);
+        }
+        
+        #cta .btn {
+            background-color: var(--white-color);
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+        
+        #cta .btn:hover {
+            background-color: var(--light-color);
+        }
+
+        /* Rodapé */
+        footer {
+            background: var(--dark-color);
+            color: var(--light-color);
+            text-align: center;
+            padding: 2rem 0;
+        }
+        
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* --- Responsividade --- */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            
+            .grid-4, .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            #how-it-works .steps-container {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            #how-it-works .step-card {
+                width: 100%;
+            }
+
+            .grid-2 > div:first-child {
+                margin-bottom: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section id="hero">
+        <div class="container">
+            <h1>Agente de IA para Pet Shops – Atendimento e Agendamentos Automatizados</h1>
+            <h3>Transforme seu Pet Shop com Automação Inteligente e Ofereça um Atendimento 5 Estrelas, 24 horas por dia.</h3>
+            <a href="#cta" class="btn">Solicite uma Demonstração Gratuita Agora</a>
+            <p class="hero-footer">Powered by n8n + IA | Contato: rodriggofranz@gmail.com</p>
+        </div>
+    </section>
+
+    <section id="challenge">
+        <div class="container">
+            <h2>Sua equipe está sobrecarregada? Seus clientes estão esperando?</h2>
+            <p>A gestão manual do atendimento e dos agendamentos pode estar custando mais do que você imagina.</p>
+            <div class="grid-4">
+                <div class="card">
+                    <div class="icon">🕒</div>
+                    <h3>Respostas Imediatas</h3>
+                    <p>No mundo digital, cada minuto de espera no WhatsApp é uma oportunidade para o seu concorrente responder primeiro.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">❌</div>
+                    <h3>Erros Manuais</h3>
+                    <p>Anotar o serviço errado, trocar horários ou errar o nome do pet gera confusão e desgasta a relação com o cliente.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">💸</div>
+                    <h3>Prejuízo com Faltas</h3>
+                    <p>Um cliente que esquece o horário gera um buraco na sua agenda e prejuízo direto no seu caixa.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">💬</div>
+                    <h3>Atendimento Inconsistente</h3>
+                    <p>Sem um padrão, sua equipe pode esquecer de oferecer aquele serviço extra ou um produto novo, diminuindo seu ticket médio.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="solution" style="background-color: var(--light-color);">
+        <div class="container grid-2">
+            <div>
+                 <img src="https://i.ibb.co/6yV0hFh/mockup-ia-petshop.png" alt="Demonstração do Chatbot no celular" style="max-width: 100%; border-radius: 10px;">
+            </div>
+            <div style="text-align: left;">
+                <h2>O Assistente Virtual que Trabalha por Você</h2>
+                <p>Nosso Agente de IA é a solução definitiva para automatizar e otimizar a comunicação. Integrado diretamente ao seu WhatsApp, ele trabalha 24/7 para garantir que nenhuma oportunidade seja perdida.</p>
+                <ul>
+                    <li><strong>Atendimento 100% automatizado:</strong> Respostas instantâneas e cordiais, a qualquer hora.</li>
+                    <li><strong>Agendamentos em segundos:</strong> O cliente escolhe o serviço, profissional e horário na conversa.</li>
+                    <li><strong>Lembretes automáticos:</strong> Reduza faltas com confirmações e lembretes inteligentes.</li>
+                    <li><strong>Histórico completo:</strong> Informações do cliente e do pet para um atendimento personalizado.</li>
+                    <li><strong>Sugestões com IA:</strong> Aumente seu ticket médio com ofertas de produtos e serviços.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works">
+        <div class="container">
+            <h2>Simples, Rápido e Eficiente</h2>
+            <p>Veja como é fácil transformar seu atendimento em 5 passos:</p>
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Mensagem</h3>
+                    <p>O cliente envia uma mensagem para o seu WhatsApp.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Resposta da IA</h3>
+                    <p>O agente virtual responde com um menu de opções claras.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Agendamento</h3>
+                    <p>O cliente escolhe o serviço e o horário disponível.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Lembrete</h3>
+                    <p>O sistema envia um lembrete automático 24h antes.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <h3>Dados Salvos</h3>
+                    <p>O horário é bloqueado na agenda e os dados são salvos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" style="background-color: var(--light-color);">
+        <div class="container">
+            <h2>Recursos Poderosos para um Negócio Imparável</h2>
+            <div class="feature-item">
+                <div class="icon">✅</div>
+                <p><strong>Atendimento Instantâneo 24/7:</strong> Seu pet shop sempre aberto para negócios, mesmo fora do horário comercial.</p>
+            </div>
+             <div class="feature-item">
+                <div class="icon">✅</div>
+                <p><strong>Agendamento Fácil e Inteligente:</strong> Uma experiência de agendamento tão simples que seus clientes vão adorar.</p>
+            </div>
+             <div class="feature-item">
+                <div class="icon">✅</div>
+                <p><strong>Lembretes Personalizados e Automáticos:</strong> Reduza as faltas e otimize sua agenda sem esforço manual.</p>
+            </div>
+             <div class="feature-item">
+                <div class="icon">✅</div>
+                <p><strong>Histórico Centralizado do Cliente e do Pet:</strong> Conheça cada cliente a fundo e ofereça um serviço VIP.</p>
+            </div>
+            <div class="feature-item">
+                <div class="icon">✅</div>
+                <p><strong>Recomendações Inteligentes para Aumentar Vendas:</strong> Use a IA para fazer ofertas personalizadas.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="benefits">
+        <div class="container">
+            <h2>Resultados que Você Sente no Caixa e na Rotina</h2>
+            <div class="grid-2">
+                <div style="text-align: left;">
+                    <div class="benefit-item">
+                        <div class="icon">📉</div>
+                        <div>
+                            <h3>Redução de 70%</h3>
+                            <p>no tempo gasto com atendimento manual.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="icon">📆</div>
+                        <div>
+                            <h3>Aumento de 40%</h3>
+                            <p>na taxa de comparecimento dos clientes.</p>
+                        </div>
+                    </div>
+                </div>
+                 <div style="text-align: left;">
+                    <div class="benefit-item">
+                        <div class="icon">💰</div>
+                        <div>
+                            <h3>Crescimento de Vendas</h3>
+                            <p>com up-sell e cross-sell da IA.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="icon">🐾</div>
+                        <div>
+                            <h3>Clientes Mais Satisfeitos</h3>
+                            <p>e fiéis com uma experiência moderna e ágil.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="integrations" style="background-color: var(--light-color);">
+        <div class="container">
+            <h2>Conecte Tudo em um Só Lugar</h2>
+            <p>Nossa solução se conecta perfeitamente às ferramentas que você já utiliza.</p>
+            <div class="logos">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/1022px-WhatsApp.svg.png" alt="WhatsApp">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Google_Calendar_icon_%282020%29.svg/1024px-Google_Calendar_icon_%282020%29.svg.png" alt="Google Calendar">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Google_Sheets_logo_%282014-2020%29.svg/1197px-Google_Sheets_logo_%282014-2020%29.svg.png" alt="Google Sheets">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Twilio-logo-red.svg/1280px-Twilio-logo-red.svg.png" alt="Twilio" style="height: 40px;">
+            </div>
+        </div>
+    </section>
+
+    <section id="cta">
+        <div class="container">
+            <h2>Pronto para Ver a Mágica Acontecer no seu Pet Shop?</h2>
+            <p>Chega de perder clientes e se estressar com a agenda. Veja na prática como nosso Agente de IA pode revolucionar sua gestão.</p>
+            <a href="mailto:rodriggofranz@gmail.com?subject=Demonstração Gratuita - Agente de IA para Pet Shops&body=Olá! Gostaria de agendar uma demonstração gratuita do Agente de IA para o meu pet shop." class="btn">QUERO MINHA DEMONSTRAÇÃO GRATUITA</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p><strong>Agente de IA para Pet Shops</strong></p>
+            <p>Desenvolvido com tecnologia de ponta utilizando n8n + IA personalizada para o setor PET.</p>
+            <p>Contato: <strong>rodriggofranz@gmail.com</strong></p>
+            <p>© 2025 | Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+</body>
+</html>
